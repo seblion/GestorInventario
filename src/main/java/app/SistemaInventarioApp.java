@@ -23,42 +23,43 @@ public class SistemaInventarioApp extends JFrame {
         panel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
         
         // Título
         JLabel lblTitulo = new JLabel("Sistema de Gestión de Inventario");
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 24));
         lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
         panel.add(lblTitulo, gbc);
         
-        gbc.gridwidth = 1;
+        // Botón Inventario
         gbc.gridy = 1;
-        
-        // Botones del menú
         JButton btnInventario = new JButton("Gestión de Inventario");
         btnInventario.setPreferredSize(new Dimension(250, 50));
         btnInventario.setFont(new Font("Arial", Font.PLAIN, 16));
         btnInventario.addActionListener(e -> abrirGestionInventario());
-        gbc.gridx = 0;
-        gbc.gridy = 2;
         panel.add(btnInventario, gbc);
         
+        // Botón Proveedores
+        gbc.gridy = 2;
         JButton btnProveedores = new JButton("Gestión de Proveedores");
         btnProveedores.setPreferredSize(new Dimension(250, 50));
         btnProveedores.setFont(new Font("Arial", Font.PLAIN, 16));
         btnProveedores.addActionListener(e -> abrirGestionProveedores());
-        gbc.gridy = 3;
         panel.add(btnProveedores, gbc);
-        
+
+        // Botón Salir
+        gbc.gridy = 3;
         JButton btnSalir = new JButton("Salir");
         btnSalir.setPreferredSize(new Dimension(250, 50));
         btnSalir.setFont(new Font("Arial", Font.PLAIN, 16));
         btnSalir.addActionListener(e -> salir());
-        gbc.gridy = 4;
         panel.add(btnSalir, gbc);
+
+        gbc.gridy = 4;
+        gbc.weighty = 1.0;
+        panel.add(Box.createVerticalGlue(), gbc);
         
         add(panel);
     }
