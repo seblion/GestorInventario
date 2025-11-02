@@ -77,6 +77,7 @@ public class VistaInventario extends JFrame {
         panelFormulario.add(new JLabel("Precio:"), gbc);
         gbc.gridx = 3; gbc.weightx = 1.0;
         txtPrecio = new JTextField(15);
+        txtPrecio.setEditable(true);
         panelFormulario.add(txtPrecio, gbc);
         
         gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0.0;
@@ -188,8 +189,8 @@ public class VistaInventario extends JFrame {
         
         Object categoria = tablaProductos.getValueAt(fila, 3);
         txtCategoria.setText(categoria != null ? categoria.toString() : "");
-        
-        txtPrecio.setText(tablaProductos.getValueAt(fila, 4).toString());
+        String precioStr = tablaProductos.getValueAt(fila, 4).toString().replace(',', '.');
+        txtPrecio.setText(precioStr);
         txtCantidad.setText(tablaProductos.getValueAt(fila, 5).toString());
     }
     

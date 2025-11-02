@@ -42,7 +42,7 @@ public class ControladorInventario {
             String codigo = vista.getTxtCodigo().getText().trim();
             String nombre = vista.getTxtNombre().getText().trim();
             String categoria = vista.getTxtCategoria().getText().trim();
-            double precio = Double.parseDouble(vista.getTxtPrecio().getText());
+            double precio = parsePrecio(vista.getTxtPrecio().getText());
             int cantidad = Integer.parseInt(vista.getTxtCantidad().getText());
             
             if (codigo.isEmpty() || nombre.isEmpty()) {
@@ -50,7 +50,8 @@ public class ControladorInventario {
                     "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
+
+                      
             Proveedor proveedor = null;
             if (vista.getCmbProveedor().getSelectedItem() != null) {
                 proveedor = (Proveedor) vista.getCmbProveedor().getSelectedItem();
@@ -90,7 +91,7 @@ public class ControladorInventario {
             String codigo = vista.getTxtCodigo().getText().trim();
             String nombre = vista.getTxtNombre().getText().trim();
             String categoria = vista.getTxtCategoria().getText().trim();
-            double precio = Double.parseDouble(vista.getTxtPrecio().getText());
+            double precio = parsePrecio(vista.getTxtPrecio().getText());
             int cantidad = Integer.parseInt(vista.getTxtCantidad().getText());
             
             Proveedor proveedor = null;
@@ -224,7 +225,7 @@ public class ControladorInventario {
                 vista.getTxtCodigo().setText(producto.getCodigo());
                 vista.getTxtNombre().setText(producto.getNombre());
                 vista.getTxtCategoria().setText(producto.getCategoria());
-                vista.getTxtPrecio().setText(String.valueOf(producto.getPrecio()));
+                vista.getTxtPrecio().setText(formatearPrecio(producto.getPrecio()));
                 vista.getTxtCantidad().setText(String.valueOf(producto.getCantidad()));
                 
                 if (producto.getProveedor() != null) {
@@ -275,5 +276,20 @@ public class ControladorInventario {
         vista.getTxtCantidadMovimiento().setText("");
         vista.getTxtMotivo().setText("");
         vista.getCmbProveedorMovimiento().setSelectedIndex(0);
+    }
+
+    private String formatearPrecio(double precio) {
+    return String.format("%.2f", precio).replace(',', '.');
+}
+
+    /**
+     * Convierte un string con precio a double, aceptando tanto punto como coma
+     */
+    private double parsePrecio(String precioStr) throws NumberFormatException {
+        if (precioStr == null || precioStr.trim().isEmpty()) {
+            throw new NumberFormatException("El precio no puede estar vacío");
+        }
+        String precioNormalizado = precioStr.trim().replace(',', '.');
+        return Double.parseDouble(precioNormalizado);
     }
 }

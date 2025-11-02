@@ -14,7 +14,7 @@ public class DatabaseConnection {
 
 
         private static DatabaseConnection conexionBase;
-        protected Connection conexion = null;
+        public Connection conexion = null;
         protected Statement sentencia = null;
 
         protected ResultSet resultado = null;
@@ -30,7 +30,7 @@ public class DatabaseConnection {
         }
 
         // MÉTODOS
-
+        
         /**
          * Método que conecta el Driver JDBC y luego establece una conexión con el objeto Connection usando la URL configurada para SQL Server.
          *
@@ -40,6 +40,7 @@ public class DatabaseConnection {
             try {
                 Class.forName(DRIVER); // Conecta al driver SQL Server
                 conexion = DriverManager.getConnection(URL, USER, PASSWORD); // Establece la conexión
+                conexion.setAutoCommit(false);
             } catch (ClassNotFoundException | SQLException e) {
                 throw e;
             }
@@ -48,7 +49,7 @@ public class DatabaseConnection {
          * Método que verifica si mis Objetos de Conexión, Sentencia y Resultado tienen valores asignados. Si es así, se los devuelve a un estado 'null'
          * @throws Exception
          */
-        protected void desconectarBase() throws Exception {
+        public void desconectarBase() throws Exception {
             try {
                 if (conexion != null) {
                     conexion.close();
@@ -74,6 +75,7 @@ public class DatabaseConnection {
                 conectarBase();
                 sentencia = conexion.createStatement();
                 sentencia.executeUpdate(sql);
+                conexion.commit();
             } catch (SQLException | ClassNotFoundException e) {
                 conexion.rollback();
                 throw e;
@@ -90,6 +92,7 @@ public class DatabaseConnection {
         public void consultarBase(String sql) throws Exception {
             try {
                 conectarBase();
+                conexion.setAutoCommit(true);
                 sentencia = conexion.createStatement();
                 resultado = sentencia.executeQuery(sql);
             } catch (Exception e) {

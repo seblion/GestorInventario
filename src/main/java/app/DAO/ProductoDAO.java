@@ -21,86 +21,201 @@ public class ProductoDAO {
     /* ======================= CRUD ======================= */
 
     public boolean registrarProducto(Producto producto) throws Exception {
-        String sql = "INSERT INTO producto (codigo, nombre, categoria, precio, cantidad, proveedor_id) " +
-                "VALUES (%d, '%s', '%s', %.2f, %d, %s)".formatted(
-                        producto.getId(),
-                        producto.getCodigo(),
-                        producto.getNombre(),
-                        producto.getCategoria(),
-                        producto.getPrecio(),
-                        producto.getCantidad(),
-                        producto.getProveedor() != null ? producto.getProveedor().getId() : "NULL"
-                );
-
-        db.insertarModificarEliminar(sql);
-        return true;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        
+        try {
+            db.conectarBase();
+            conn = db.conexion;
+            
+            String sql = "INSERT INTO producto (codigo, nombre, categoria, precio, cantidad, proveedor_id) " +
+                        "VALUES (?, ?, ?, ?, ?, ?)";
+            
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, producto.getCodigo());
+            ps.setString(2, producto.getNombre());
+            ps.setString(3, producto.getCategoria());
+            ps.setDouble(4, producto.getPrecio());
+            ps.setInt(5, producto.getCantidad());
+            
+            if (producto.getProveedor() != null) {
+                ps.setInt(6, producto.getProveedor().getId());
+            } else {
+                ps.setNull(6, Types.INTEGER);
+            }
+            
+            ps.executeUpdate();
+            conn.commit();
+            return true;
+            
+        } catch (SQLException e) {
+            conn.rollback();
+            throw e;
+        } finally {
+            if (ps != null) ps.close();
+            db.desconectarBase();
+        }
     }
 
     public boolean actualizarProducto(Producto producto) throws Exception {
-        String sql = "UPDATE producto SET codigo='%s', nombre='%s', categoria='%s', precio=%.2f, cantidad=%d, proveedor_id=%s " +
-                "WHERE id=%d".formatted(
-                        producto.getCodigo(),
-                        producto.getNombre(),
-                        producto.getCategoria(),
-                        producto.getPrecio(),
-                        producto.getCantidad(),
-                        producto.getProveedor() != null ? producto.getProveedor().getId() : "NULL",
-                        producto.getId()
-                );
-
-        db.insertarModificarEliminar(sql);
-        return true;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        
+        try {
+            db.conectarBase();
+            conn = db.conexion;
+            
+            String sql = "UPDATE producto SET codigo=?, nombre=?, categoria=?, precio=?, cantidad=?, proveedor_id=? " +
+                        "WHERE id=?";
+            
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, producto.getCodigo());
+            ps.setString(2, producto.getNombre());
+            ps.setString(3, producto.getCategoria());
+            ps.setDouble(4, producto.getPrecio());
+            ps.setInt(5, producto.getCantidad());
+            
+            if (producto.getProveedor() != null) {
+                ps.setInt(6, producto.getProveedor().getId());
+            } else {
+                ps.setNull(6, Types.INTEGER);
+            }
+            
+            ps.setInt(7, producto.getId());
+            
+            ps.executeUpdate();
+            conn.commit();
+            return true;
+            
+        } catch (SQLException e) {
+            conn.rollback();
+            throw e;
+        } finally {
+            if (ps != null) ps.close();
+            db.desconectarBase();
+        }
     }
 
     public boolean eliminarProducto(String codigo) throws Exception {
-        String sql = "DELETE FROM producto WHERE codigo='%s'".formatted(codigo);
-        db.insertarModificarEliminar(sql);
-        return true;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        
+        try {
+            db.conectarBase();
+            conn = db.conexion;
+            
+            String sql = "DELETE FROM producto WHERE codigo=?";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, codigo);
+            
+            ps.executeUpdate();
+            conn.commit();
+            return true;
+            
+        } catch (SQLException e) {
+            conn.rollback();
+            throw e;
+        } finally {
+            if (ps != null) ps.close();
+            db.desconectarBase();
+        }
     }
 
     /* ======================= CONSULTAS ======================= */
 
     public Producto consultarPorId(int id) throws Exception {
-        String sql = "SELECT * FROM producto WHERE id=%d".formatted(id);
-        db.consultarBase(sql);
-        ResultSet rs = db.getResultado();
-        return rs.next() ? mapearProducto(rs) : null;
+        PreparedStatement ps = null;
+        try {
+            db.conectarBase();
+            String sql = "SELECT * FROM producto WHERE id=?";
+            ps = db.conexion.prepareStatement(sql);
+            ps.setInt(1, id);
+            
+            ResultSet rs = ps.executeQuery();
+            return rs.next() ? mapearProducto(rs) : null;
+        } finally {
+            if (ps != null) ps.close();
+            db.desconectarBase();
+        }
     }
 
     public Producto consultarPorCodigo(String codigo) throws Exception {
-        String sql = "SELECT * FROM producto WHERE codigo='%s'".formatted(codigo);
-        db.consultarBase(sql);
-        ResultSet rs = db.getResultado();
-        return rs.next() ? mapearProducto(rs) : null;
+        PreparedStatement ps = null;
+        try {
+            db.conectarBase();
+            String sql = "SELECT * FROM producto WHERE codigo=?";
+            ps = db.conexion.prepareStatement(sql);
+            ps.setString(1, codigo);
+            
+            ResultSet rs = ps.executeQuery();
+            return rs.next() ? mapearProducto(rs) : null;
+        } finally {
+            if (ps != null) ps.close();
+            db.desconectarBase();
+        }
     }
 
     public List<Producto> listarTodos() throws Exception {
-        String sql = "SELECT * FROM producto ORDER BY nombre";
-        db.consultarBase(sql);
-        return mapearLista(db.getResultado());
+        try {
+            String sql = "SELECT * FROM producto ORDER BY nombre";
+            db.consultarBase(sql);
+            return mapearLista(db.getResultado());
+        } finally {
+            db.desconectarBase();
+        }
     }
 
     public List<Producto> consultarPorCategoria(String categoria) throws Exception {
-        String sql = "SELECT * FROM producto WHERE categoria='%s' ORDER BY nombre".formatted(categoria);
-        db.consultarBase(sql);
-        return mapearLista(db.getResultado());
+        PreparedStatement ps = null;
+        try {
+            db.conectarBase();
+            String sql = "SELECT * FROM producto WHERE categoria=? ORDER BY nombre";
+            ps = db.conexion.prepareStatement(sql);
+            ps.setString(1, categoria);
+            
+            ResultSet rs = ps.executeQuery();
+            return mapearLista(rs);
+        } finally {
+            if (ps != null) ps.close();
+            db.desconectarBase();
+        }
     }
 
     public boolean actualizarStock(int productoId, int nuevaCantidad) throws Exception {
-        String sql = "UPDATE producto SET cantidad=%d WHERE id=%d".formatted(nuevaCantidad, productoId);
-        db.insertarModificarEliminar(sql);
-        return true;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        
+        try {
+            db.conectarBase();
+            conn = db.conexion;
+            
+            String sql = "UPDATE producto SET cantidad=? WHERE id=?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, nuevaCantidad);
+            ps.setInt(2, productoId);
+            
+            ps.executeUpdate();
+            conn.commit();
+            return true;
+            
+        } catch (SQLException e) {
+            conn.rollback();
+            throw e;
+        } finally {
+            if (ps != null) ps.close();
+            db.desconectarBase();
+        }
     }
 
     /* ======================= UTIL ======================= */
 
-    private List<Producto> mapearLista(ResultSet rs) throws Exception  {
+    private List<Producto> mapearLista(ResultSet rs) throws Exception {
         List<Producto> lista = new ArrayList<>();
         while (rs.next()) lista.add(mapearProducto(rs));
         return lista;
     }
 
-    private Producto mapearProducto(ResultSet rs) throws Exception  {
+    private Producto mapearProducto(ResultSet rs) throws Exception {
         Proveedor proveedor = null;
         int proveedorId = rs.getInt("proveedor_id");
         if (!rs.wasNull()) {
