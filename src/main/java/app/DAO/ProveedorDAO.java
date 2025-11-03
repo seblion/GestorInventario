@@ -23,8 +23,8 @@ public class ProveedorDAO {
      */
     public boolean registrarProveedor(Proveedor proveedor) throws Exception {
         String sql = String.format(
-                "INSERT INTO proveedor (nombre, contacto, codigo_producto) VALUES ('%s', '%s', '%s')",
-                proveedor.getNombre(), proveedor.getContacto(), proveedor.getCodigoProducto()
+                "INSERT INTO proveedor (nombre, contacto) VALUES ('%s', '%s'')",
+                proveedor.getNombre(), proveedor.getContacto()
         );
 
         db.insertarModificarEliminar(sql);
@@ -38,8 +38,8 @@ public class ProveedorDAO {
      */
     public boolean actualizarProveedor(Proveedor proveedor) throws Exception {
         String sql = String.format(
-                "UPDATE proveedor SET nombre='%s', contacto='%s', codigo_producto='%s' WHERE id=%d",
-                proveedor.getNombre(), proveedor.getContacto(), proveedor.getCodigoProducto(), proveedor.getId()
+                "UPDATE proveedor SET nombre='%s', contacto='%s' WHERE id=%d",
+                proveedor.getNombre(), proveedor.getContacto(), proveedor.getId()
         );
 
         db.insertarModificarEliminar(sql);
@@ -100,8 +100,7 @@ public class ProveedorDAO {
         return new Proveedor(
                 rs.getInt("id"),
                 rs.getString("nombre"),
-                rs.getString("contacto"),
-                rs.getString("codigo_producto")
+                rs.getString("contacto")
         );
     }
 }

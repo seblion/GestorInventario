@@ -40,7 +40,6 @@ public class ControladorProveedor {
         try {
             String nombre = vista.getTxtNombre().getText().trim();
             String contacto = vista.getTxtContacto().getText().trim();
-            String codigoProducto = vista.getTxtCodigoProducto().getText().trim();
             
             if (nombre.isEmpty()) {
                 JOptionPane.showMessageDialog(vista, "El nombre es obligatorio", 
@@ -48,7 +47,7 @@ public class ControladorProveedor {
                 return;
             }
             
-            Proveedor proveedor = new Proveedor(nombre, contacto, codigoProducto);
+            Proveedor proveedor = new Proveedor(nombre, contacto);
             
             if (servicioProveedor.registrarProveedor(proveedor)) {
                 JOptionPane.showMessageDialog(vista, "Proveedor registrado exitosamente", 
@@ -80,15 +79,14 @@ public class ControladorProveedor {
             int id = (int) vista.getTablaProveedores().getValueAt(filaSeleccionada, 0);
             String nombre = vista.getTxtNombre().getText().trim();
             String contacto = vista.getTxtContacto().getText().trim();
-            String codigoProducto = vista.getTxtCodigoProducto().getText().trim();
-            
+    
             if (nombre.isEmpty()) {
                 JOptionPane.showMessageDialog(vista, "El nombre es obligatorio", 
                     "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             
-            Proveedor proveedor = new Proveedor(id, nombre, contacto, codigoProducto);
+            Proveedor proveedor = new Proveedor(id, nombre, contacto);
             
             if (servicioProveedor.actualizarProveedor(proveedor)) {
                 JOptionPane.showMessageDialog(vista, "Proveedor actualizado exitosamente", 
@@ -158,7 +156,6 @@ public class ControladorProveedor {
             if (proveedor != null) {
                 vista.getTxtNombre().setText(proveedor.getNombre());
                 vista.getTxtContacto().setText(proveedor.getContacto());
-                vista.getTxtCodigoProducto().setText(proveedor.getCodigoProducto());
             } else {
                 JOptionPane.showMessageDialog(vista, "Proveedor no encontrado", 
                     "Información", JOptionPane.INFORMATION_MESSAGE);
@@ -188,7 +185,6 @@ public class ControladorProveedor {
     private void limpiarCampos() {
         vista.getTxtNombre().setText("");
         vista.getTxtContacto().setText("");
-        vista.getTxtCodigoProducto().setText("");
         vista.getTablaProveedores().clearSelection();
     }
 }

@@ -3,7 +3,6 @@ package app.DAO;
 import app.Database.DatabaseConnection;
 import app.Modelo.MovimientoInventario;
 import app.Modelo.Producto;
-import app.Modelo.Proveedor;
 
 import java.sql.ResultSet;
 import java.sql.Timestamp;
@@ -13,7 +12,6 @@ import java.util.List;
 public class MovimientoInventarioDAO {
 
     private final ProductoDAO productoDAO = new ProductoDAO();
-    private final ProveedorDAO proveedorDAO = new ProveedorDAO();
     private final DatabaseConnection db;
 
     public MovimientoInventarioDAO() {
@@ -26,14 +24,13 @@ public class MovimientoInventarioDAO {
     public boolean registrarMovimiento(MovimientoInventario movimiento) throws Exception {
         // Inserción
         String sql = String.format(
-                "INSERT INTO movimiento_inventario (producto_id, tipo, cantidad, fecha, motivo, proveedor_id) " +
-                        "VALUES (%d, '%s', %d, '%s', '%s', %s)",
+                "INSERT INTO movimiento_inventario (producto_id, tipo, cantidad, fecha, motivo) " +
+                        "VALUES (%d, '%s', %d, '%s', '%s')",
                 movimiento.getProducto().getId(),
                 movimiento.getTipo().name(),
                 movimiento.getCantidad(),
                 new Timestamp(movimiento.getFecha().getTime()),
-                movimiento.getMotivo(),
-                movimiento.getProveedor() != null ? movimiento.getProveedor().getId() : "NULL"
+                movimiento.getMotivo()
         );
 
         // Ejecutar inserción
@@ -131,12 +128,6 @@ public class MovimientoInventarioDAO {
     private MovimientoInventario mapearMovimiento(ResultSet rs) throws Exception {
         Producto producto = productoDAO.consultarPorId(rs.getInt("producto_id"));
 
-        Proveedor proveedor = null;
-        int proveedorId = rs.getInt("proveedor_id");
-        if (!rs.wasNull()) {
-            proveedor = proveedorDAO.consultarPorId(proveedorId);
-        }
-
         MovimientoInventario.TipoMovimiento tipo =
                 MovimientoInventario.TipoMovimiento.valueOf(rs.getString("tipo"));
 
@@ -146,8 +137,7 @@ public class MovimientoInventarioDAO {
                 tipo,
                 rs.getInt("cantidad"),
                 rs.getTimestamp("fecha"),
-                rs.getString("motivo"),
-                proveedor
+                rs.getString("motivo")
         );
     }
 }

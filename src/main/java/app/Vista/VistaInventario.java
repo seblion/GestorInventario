@@ -18,7 +18,6 @@ public class VistaInventario extends JFrame {
     
     // Componentes para movimientos
     private JTextField txtCodigoMovimiento, txtCantidadMovimiento, txtMotivo;
-    private JComboBox<Proveedor> cmbProveedorMovimiento;
     private JButton btnRegistrarEntrada, btnRegistrarSalida;
     
     // Tabla
@@ -162,13 +161,7 @@ public class VistaInventario extends JFrame {
         gbc.gridx = 1; gbc.weightx = 1.0;
         txtMotivo = new JTextField(20);
         panelFormulario.add(txtMotivo, gbc);
-        
-        gbc.gridx = 0; gbc.gridy = 3; gbc.weightx = 0.0;
-        panelFormulario.add(new JLabel("Proveedor (Entrada):"), gbc);
-        gbc.gridx = 1; gbc.weightx = 1.0;
-        cmbProveedorMovimiento = new JComboBox<>();
-        panelFormulario.add(cmbProveedorMovimiento, gbc);
-        
+              
         JPanel panelBotones = new JPanel(new FlowLayout());
         btnRegistrarEntrada = new JButton("Registrar Entrada");
         btnRegistrarSalida = new JButton("Registrar Salida");
@@ -212,14 +205,10 @@ public class VistaInventario extends JFrame {
     
     public void cargarProveedores(List<Proveedor> proveedores) {
         cmbProveedor.removeAllItems();
-        cmbProveedorMovimiento.removeAllItems();
-        
         cmbProveedor.addItem(null);
-        cmbProveedorMovimiento.addItem(null);
         
         for (Proveedor p : proveedores) {
             cmbProveedor.addItem(p);
-            cmbProveedorMovimiento.addItem(p);
         }
     }
     
@@ -246,7 +235,6 @@ public class VistaInventario extends JFrame {
     public JTextField getTxtCodigoMovimiento() { return txtCodigoMovimiento; }
     public JTextField getTxtCantidadMovimiento() { return txtCantidadMovimiento; }
     public JTextField getTxtMotivo() { return txtMotivo; }
-    public JComboBox<Proveedor> getCmbProveedorMovimiento() { return cmbProveedorMovimiento; }
     public JButton getBtnRegistrarEntrada() { return btnRegistrarEntrada; }
     public JButton getBtnRegistrarSalida() { return btnRegistrarSalida; }
     public JTable getTablaProductos() { return tablaProductos; }

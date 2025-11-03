@@ -3,7 +3,6 @@ package app.Servicio;
 import app.DAO.MovimientoInventarioDAO;
 import app.DAO.ProductoDAO;
 import app.Modelo.Producto;
-import app.Modelo.Proveedor;
 import app.Modelo.MovimientoInventario;
 
 import java.util.Date;
@@ -25,8 +24,7 @@ public class ServicioInventario {
     /**
      * Registra una entrada de productos al inventario
      */
-    public boolean registrarEntrada(Producto producto, int cantidad, Date fecha, 
-                                   Proveedor proveedor, String motivo) throws Exception {
+    public boolean registrarEntrada(Producto producto, int cantidad, Date fecha, String motivo) throws Exception {
         if (producto == null) {
             System.err.println("El producto no puede ser nulo");
             return false;
@@ -44,7 +42,6 @@ public class ServicioInventario {
         movimiento.setCantidad(cantidad);
         movimiento.setFecha(fecha != null ? fecha : new Date());
         movimiento.setMotivo(motivo != null ? motivo : "Entrada de inventario");
-        movimiento.setProveedor(proveedor);
         
         return movimientoDAO.registrarMovimiento(movimiento);
     }

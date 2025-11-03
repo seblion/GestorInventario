@@ -7,7 +7,6 @@ CREATE TABLE proveedor (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
     contacto VARCHAR(100),
-    codigo_producto VARCHAR(50),
     UNIQUE KEY (nombre)
 );
 
@@ -31,15 +30,13 @@ CREATE TABLE movimiento_inventario (
     cantidad INT NOT NULL,
     fecha DATETIME NOT NULL,
     motivo VARCHAR(200),
-    proveedor_id INT,
-    FOREIGN KEY (producto_id) REFERENCES producto(id) ON DELETE CASCADE,
-    FOREIGN KEY (proveedor_id) REFERENCES proveedor(id) ON DELETE SET NULL
+    FOREIGN KEY (producto_id) REFERENCES producto(id) ON DELETE CASCADE
 );
 
 -- Datos de ejemplo
-INSERT INTO proveedor (nombre, contacto, codigo_producto) VALUES
-('Proveedor ABC', 'contacto@abc.com', 'PROV001'),
-('Distribuidora XYZ', 'ventas@xyz.com', 'PROV002');
+INSERT INTO proveedor (nombre, contacto) VALUES
+('Proveedor ABC', 'contacto@abc.com'),
+('Distribuidora XYZ', 'ventas@xyz.com');
 
 INSERT INTO producto (codigo, nombre, categoria, precio, cantidad, proveedor_id) VALUES
 ('PROD001', 'Laptop HP', 'Electrónica', 850.00, 10, 1),

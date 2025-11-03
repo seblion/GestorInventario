@@ -161,12 +161,7 @@ public class ControladorInventario {
                 return;
             }
             
-            Proveedor proveedor = null;
-            if (vista.getCmbProveedorMovimiento().getSelectedItem() != null) {
-                proveedor = (Proveedor) vista.getCmbProveedorMovimiento().getSelectedItem();
-            }
-            
-            if (servicioInventario.registrarEntrada(producto, cantidad, new Date(), proveedor, motivo)) {
+            if (servicioInventario.registrarEntrada(producto, cantidad, new Date(), motivo)) {
                 JOptionPane.showMessageDialog(vista, "Entrada registrada exitosamente", 
                     "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 listarProductos();
@@ -275,7 +270,6 @@ public class ControladorInventario {
         vista.getTxtCodigoMovimiento().setText("");
         vista.getTxtCantidadMovimiento().setText("");
         vista.getTxtMotivo().setText("");
-        vista.getCmbProveedorMovimiento().setSelectedIndex(0);
     }
 
     private String formatearPrecio(double precio) {

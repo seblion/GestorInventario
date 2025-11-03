@@ -8,23 +8,20 @@ public class Proveedor {
     private int id;
     private String nombre;
     private String contacto;
-    private String codigoProducto;
-    
+
     // Constructores
     public Proveedor() {
     }
     
-    public Proveedor(String nombre, String contacto, String codigoProducto) {
+    public Proveedor(String nombre, String contacto) {
         this.nombre = nombre;
         this.contacto = contacto;
-        this.codigoProducto = codigoProducto;
     }
     
-    public Proveedor(int id, String nombre, String contacto, String codigoProducto) {
+    public Proveedor(int id, String nombre, String contacto) {
         this.id = id;
         this.nombre = nombre;
         this.contacto = contacto;
-        this.codigoProducto = codigoProducto;
     }
     
     // Getters y Setters
@@ -50,14 +47,6 @@ public class Proveedor {
     
     public void setContacto(String contacto) {
         this.contacto = contacto;
-    }
-    
-    public String getCodigoProducto() {
-        return codigoProducto;
-    }
-    
-    public void setCodigoProducto(String codigoProducto) {
-        this.codigoProducto = codigoProducto;
     }
     
     /**

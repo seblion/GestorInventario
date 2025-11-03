@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class VistaProveedor extends JFrame {
     
-    private JTextField txtNombre, txtContacto, txtCodigoProducto;
+    private JTextField txtNombre, txtContacto;
     private JButton btnRegistrar, btnActualizar, btnEliminar, btnBuscar, btnLimpiar, btnListar;
     private JTable tablaProveedores;
     private DefaultTableModel modeloTabla;
@@ -70,16 +70,6 @@ public class VistaProveedor extends JFrame {
         txtContacto = new JTextField(20);
         panel.add(txtContacto, gbc);
         
-        // Código de Producto
-        gbc.gridx = 0; gbc.gridy = 2;
-        gbc.weightx = 0.0;
-        panel.add(new JLabel("Código Producto:"), gbc);
-        
-        gbc.gridx = 1; gbc.gridy = 2;
-        gbc.weightx = 1.0;
-        txtCodigoProducto = new JTextField(20);
-        panel.add(txtCodigoProducto, gbc);
-        
         return panel;
     }
     
@@ -107,7 +97,7 @@ public class VistaProveedor extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createTitledBorder("Lista de Proveedores"));
         
-        String[] columnas = {"ID", "Nombre", "Contacto", "Código Producto"};
+        String[] columnas = {"ID", "Nombre", "Contacto"};
         modeloTabla = new DefaultTableModel(columnas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -139,9 +129,6 @@ public class VistaProveedor extends JFrame {
         
         Object contacto = tablaProveedores.getValueAt(fila, 2);
         txtContacto.setText(contacto != null ? contacto.toString() : "");
-        
-        Object codigoProducto = tablaProveedores.getValueAt(fila, 3);
-        txtCodigoProducto.setText(codigoProducto != null ? codigoProducto.toString() : "");
     }
     
     public void actualizarTabla(List<Proveedor> proveedores) {
@@ -150,8 +137,7 @@ public class VistaProveedor extends JFrame {
             Object[] fila = {
                 p.getId(),
                 p.getNombre(),
-                p.getContacto(),
-                p.getCodigoProducto()
+                p.getContacto()
             };
             modeloTabla.addRow(fila);
         }
@@ -167,7 +153,6 @@ public class VistaProveedor extends JFrame {
     // Getters
     public JTextField getTxtNombre() { return txtNombre; }
     public JTextField getTxtContacto() { return txtContacto; }
-    public JTextField getTxtCodigoProducto() { return txtCodigoProducto; }
     public JButton getBtnRegistrar() { return btnRegistrar; }
     public JButton getBtnActualizar() { return btnActualizar; }
     public JButton getBtnEliminar() { return btnEliminar; }

@@ -17,7 +17,6 @@ public class MovimientoInventario {
     private int cantidad;
     private Date fecha;
     private String motivo;
-    private Proveedor proveedor;
     
     // Constructores
     public MovimientoInventario() {
@@ -34,14 +33,13 @@ public class MovimientoInventario {
     }
     
     public MovimientoInventario(int id, Producto producto, TipoMovimiento tipo,
-                               int cantidad, Date fecha, String motivo, Proveedor proveedor) {
+                               int cantidad, Date fecha, String motivo) {
         this.id = id;
         this.producto = producto;
         this.tipo = tipo;
         this.cantidad = cantidad;
         this.fecha = fecha;
         this.motivo = motivo;
-        this.proveedor = proveedor;
     }
     
     // Getters y Setters
@@ -91,14 +89,6 @@ public class MovimientoInventario {
     
     public void setMotivo(String motivo) {
         this.motivo = motivo;
-    }
-    
-    public Proveedor getProveedor() {
-        return proveedor;
-    }
-    
-    public void setProveedor(Proveedor proveedor) {
-        this.proveedor = proveedor;
     }
     
     /**
