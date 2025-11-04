@@ -35,6 +35,21 @@ public class ControladorInventario {
         vista.getBtnBuscarProducto().addActionListener(e -> buscarProducto());
         vista.getBtnListarProductos().addActionListener(e -> listarProductos());
         vista.getBtnLimpiar().addActionListener(e -> limpiarCampos());
+        
+        // Cuando se selecciona un producto en la tabla, mostrar sus movimientos
+        vista.getTablaProductos().getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && vista.getTablaProductos().getSelectedRow() >= 0) {
+                int fila = vista.getTablaProductos().getSelectedRow();
+                int id = (int) vista.getTablaProductos().getValueAt(fila, 0);
+                try {
+                    List<app.Modelo.MovimientoInventario> movimientos = servicioInventario.listarMovimientosPorProducto(id);
+                    vista.actualizarTablaMovimientos(movimientos);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(vista, "Error al cargar movimientos: " + ex.getMessage(),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
     }
     
     private void registrarProducto() {
@@ -165,6 +180,7 @@ public class ControladorInventario {
                 JOptionPane.showMessageDialog(vista, "Entrada registrada exitosamente", 
                     "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 listarProductos();
+                listarMovimientos();
                 limpiarCamposMovimiento();
             } else {
                 JOptionPane.showMessageDialog(vista, "Error al registrar la entrada", 
@@ -193,6 +209,7 @@ public class ControladorInventario {
                 JOptionPane.showMessageDialog(vista, "Salida registrada exitosamente", 
                     "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 listarProductos();
+                listarMovimientos();
                 limpiarCamposMovimiento();
             } else {
                 JOptionPane.showMessageDialog(vista, "Error al registrar la salida. Verifique el stock", 
@@ -200,6 +217,19 @@ public class ControladorInventario {
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(vista, "Error: " + e.getMessage(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Lista todos los movimientos y actualiza la vista
+     */
+    public void listarMovimientos() {
+        try {
+            List<app.Modelo.MovimientoInventario> movimientos = servicioInventario.listarMovimientos();
+            vista.actualizarTablaMovimientos(movimientos);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(vista, "Error al listar movimientos: " + e.getMessage(), 
                 "Error", JOptionPane.ERROR_MESSAGE);
         }
     }

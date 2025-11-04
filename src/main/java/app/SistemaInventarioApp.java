@@ -69,6 +69,8 @@ public class SistemaInventarioApp extends JFrame {
         ControladorInventario controlador = new ControladorInventario(vista);
         controlador.cargarProveedores();
         controlador.listarProductos();
+        // Cargar movimientos al abrir la gestión de inventario
+        controlador.listarMovimientos();
         vista.setVisible(true);
     }
     

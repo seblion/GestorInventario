@@ -127,7 +127,7 @@ public class ProductoDAO {
         PreparedStatement ps = null;
         try {
             db.conectarBase();
-            String sql = "SELECT * FROM producto WHERE id=?";
+            String sql = "SELECT * FROM producto WHERE id_prod=?";
             ps = db.conexion.prepareStatement(sql);
             ps.setInt(1, id);
             
@@ -217,7 +217,7 @@ public class ProductoDAO {
 
     private Producto mapearProducto(ResultSet rs) throws Exception {
         Proveedor proveedor = null;
-        int proveedorId = rs.getInt("id_prod");
+        int proveedorId = rs.getInt("id_prov");
         if (!rs.wasNull()) {
             proveedor = proveedorDAO.consultarPorId(proveedorId);
         }

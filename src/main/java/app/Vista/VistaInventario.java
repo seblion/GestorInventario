@@ -19,6 +19,9 @@ public class VistaInventario extends JFrame {
     // Componentes para movimientos
     private JTextField txtCodigoMovimiento, txtCantidadMovimiento, txtMotivo;
     private JButton btnRegistrarEntrada, btnRegistrarSalida;
+    // Tabla de movimientos
+    private JTable tablaMovimientos;
+    private DefaultTableModel modeloTablaMovimientos;
     
     // Tabla
     private JTable tablaProductos;
@@ -94,7 +97,7 @@ public class VistaInventario extends JFrame {
         // Botones
         JPanel panelBotones = new JPanel(new FlowLayout());
         btnRegistrarProducto = new JButton("Registrar");
-        btnModificarProducto = new JButton("Modificar");
+        btnModificarProducto = new JButton("Actualizar");
         btnEliminarProducto = new JButton("Eliminar");
         btnBuscarProducto = new JButton("Buscar");
         btnListarProductos = new JButton("Listar");
@@ -172,6 +175,21 @@ public class VistaInventario extends JFrame {
         panel.add(panelFormulario, BorderLayout.NORTH);
         panel.add(panelBotones, BorderLayout.CENTER);
         
+        // Tabla de Movimientos
+        String[] columnasMov = {"ID", "Producto", "Tipo", "Cantidad", "Fecha", "Motivo"};
+        modeloTablaMovimientos = new DefaultTableModel(columnasMov, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        tablaMovimientos = new JTable(modeloTablaMovimientos);
+        tablaMovimientos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane scrollMov = new JScrollPane(tablaMovimientos);
+        scrollMov.setPreferredSize(new Dimension(800, 250));
+        panel.add(scrollMov, BorderLayout.SOUTH);
+        
         return panel;
     }
     
@@ -200,6 +218,22 @@ public class VistaInventario extends JFrame {
                 p.getProveedor() != null ? p.getProveedor().getNombre() : ""
             };
             modeloTabla.addRow(fila);
+        }
+    }
+
+    public void actualizarTablaMovimientos(java.util.List<app.Modelo.MovimientoInventario> movimientos) {
+        modeloTablaMovimientos.setRowCount(0);
+        if (movimientos == null) return;
+        for (app.Modelo.MovimientoInventario m : movimientos) {
+            Object[] fila = {
+                m.getId(),
+                m.getProducto() != null ? m.getProducto().getCodigo() + " - " + m.getProducto().getNombre() : "",
+                m.getTipo() != null ? m.getTipo().name() : "",
+                m.getCantidad(),
+                m.getFecha(),
+                m.getMotivo()
+            };
+            modeloTablaMovimientos.addRow(fila);
         }
     }
     
@@ -238,4 +272,5 @@ public class VistaInventario extends JFrame {
     public JButton getBtnRegistrarEntrada() { return btnRegistrarEntrada; }
     public JButton getBtnRegistrarSalida() { return btnRegistrarSalida; }
     public JTable getTablaProductos() { return tablaProductos; }
+    public JTable getTablaMovimientos() { return tablaMovimientos; }
 }

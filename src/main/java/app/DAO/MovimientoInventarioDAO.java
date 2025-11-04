@@ -22,21 +22,7 @@ public class MovimientoInventarioDAO {
      * Registra un movimiento de inventario
      */
     public boolean registrarMovimiento(MovimientoInventario movimiento) throws Exception {
-        // Inserción
-        String sql = String.format(
-                "INSERT INTO movimientoinventario (id_prod, tipo, cantidad, fecha, motivo) " +
-                        "VALUES (%d, '%s', %d, '%s', '%s')",
-                movimiento.getProducto().getId(),
-                movimiento.getTipo().name(),
-                movimiento.getCantidad(),
-                new Timestamp(movimiento.getFecha().getTime()),
-                movimiento.getMotivo()
-        );
-
-        // Ejecutar inserción
-        db.insertarModificarEliminar(sql);
-
-        // Actualizar stock del producto
+        // Calcular nuevo stock antes de insertar para evitar movimientos inválidos
         Producto producto = movimiento.getProducto();
         int nuevoStock = producto.getCantidad();
 
@@ -46,6 +32,26 @@ public class MovimientoInventarioDAO {
             nuevoStock -= movimiento.getCantidad();
         }
 
+        if (nuevoStock < 0) {
+            // No permitir registrar salidas que dejen stock negativo
+            throw new IllegalStateException("Stock insuficiente para registrar el movimiento");
+        }
+
+        // Inserción
+        String sql = String.format(
+                "INSERT INTO movimientoinventario (id_prod, tipo, cantidad, fecha, motivo) " +
+                        "VALUES (%d, '%s', %d, '%s', '%s')",
+                producto.getId(),
+                movimiento.getTipo().name(),
+                movimiento.getCantidad(),
+                new Timestamp(movimiento.getFecha().getTime()),
+                movimiento.getMotivo()
+        );
+
+        // Ejecutar inserción
+        db.insertarModificarEliminar(sql);
+
+        // Actualizar stock del producto en la base
         if (productoDAO.actualizarStock(producto.getId(), nuevoStock)) {
             producto.setCantidad(nuevoStock);
             return true;
