@@ -24,7 +24,7 @@ public class MovimientoInventarioDAO {
     public boolean registrarMovimiento(MovimientoInventario movimiento) throws Exception {
         // Inserción
         String sql = String.format(
-                "INSERT INTO movimiento_inventario (producto_id, tipo, cantidad, fecha, motivo) " +
+                "INSERT INTO movimientoinventario (id_prod, tipo, cantidad, fecha, motivo) " +
                         "VALUES (%d, '%s', %d, '%s', '%s')",
                 movimiento.getProducto().getId(),
                 movimiento.getTipo().name(),
@@ -58,7 +58,7 @@ public class MovimientoInventarioDAO {
      * Lista todos los movimientos
      */
     public List<MovimientoInventario> listarTodos() throws Exception {
-        String sql = "SELECT * FROM movimiento_inventario ORDER BY fecha DESC";
+        String sql = "SELECT * FROM movimientoinventario ORDER BY fecha DESC";
         db.consultarBase(sql);
         ResultSet rs = db.getResultado();
 
@@ -74,7 +74,7 @@ public class MovimientoInventarioDAO {
      */
     public List<MovimientoInventario> listarPorProducto(int productoId) throws Exception {
         String sql = String.format(
-                "SELECT * FROM movimiento_inventario WHERE producto_id=%d ORDER BY fecha DESC", productoId
+                "SELECT * FROM movimientoinventario WHERE id_prod=%d ORDER BY fecha DESC", productoId
         );
 
         db.consultarBase(sql);
@@ -91,7 +91,7 @@ public class MovimientoInventarioDAO {
      */
     public List<MovimientoInventario> listarPorTipo(MovimientoInventario.TipoMovimiento tipo) throws Exception {
         String sql = String.format(
-                "SELECT * FROM movimiento_inventario WHERE tipo='%s' ORDER BY fecha DESC", tipo.name()
+                "SELECT * FROM movimientoinventario WHERE tipo='%s' ORDER BY fecha DESC", tipo.name()
         );
 
         db.consultarBase(sql);
@@ -108,7 +108,7 @@ public class MovimientoInventarioDAO {
      */
     public List<MovimientoInventario> listarPorFechas(java.util.Date fechaInicio, java.util.Date fechaFin) throws Exception {
         String sql = String.format(
-                "SELECT * FROM movimiento_inventario WHERE fecha BETWEEN '%s' AND '%s' ORDER BY fecha DESC",
+                "SELECT * FROM movimientoinventario WHERE fecha BETWEEN '%s' AND '%s' ORDER BY fecha DESC",
                 new Timestamp(fechaInicio.getTime()),
                 new Timestamp(fechaFin.getTime())
         );
@@ -126,13 +126,13 @@ public class MovimientoInventarioDAO {
      * Mapea un ResultSet a un objeto MovimientoInventario
      */
     private MovimientoInventario mapearMovimiento(ResultSet rs) throws Exception {
-        Producto producto = productoDAO.consultarPorId(rs.getInt("producto_id"));
+        Producto producto = productoDAO.consultarPorId(rs.getInt("id_prod"));
 
         MovimientoInventario.TipoMovimiento tipo =
                 MovimientoInventario.TipoMovimiento.valueOf(rs.getString("tipo"));
 
         return new MovimientoInventario(
-                rs.getInt("id"),
+                rs.getInt("id_mov"),
                 producto,
                 tipo,
                 rs.getInt("cantidad"),

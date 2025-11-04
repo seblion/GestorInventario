@@ -28,7 +28,7 @@ public class ProductoDAO {
             db.conectarBase();
             conn = db.conexion;
             
-            String sql = "INSERT INTO producto (codigo, nombre, categoria, precio, cantidad, proveedor_id) " +
+            String sql = "INSERT INTO producto (codigo, nombre, categoria, precio, cantidad, id_prov) " +
                         "VALUES (?, ?, ?, ?, ?, ?)";
             
             ps = conn.prepareStatement(sql);
@@ -65,8 +65,8 @@ public class ProductoDAO {
             db.conectarBase();
             conn = db.conexion;
             
-            String sql = "UPDATE producto SET codigo=?, nombre=?, categoria=?, precio=?, cantidad=?, proveedor_id=? " +
-                        "WHERE id=?";
+            String sql = "UPDATE producto SET codigo=?, nombre=?, categoria=?, precio=?, cantidad=?, id_prov=? " +
+                        "WHERE id_prod=?";
             
             ps = conn.prepareStatement(sql);
             ps.setString(1, producto.getCodigo());
@@ -189,7 +189,7 @@ public class ProductoDAO {
             db.conectarBase();
             conn = db.conexion;
             
-            String sql = "UPDATE producto SET cantidad=? WHERE id=?";
+            String sql = "UPDATE producto SET cantidad=? WHERE id_prod=?";
             ps = conn.prepareStatement(sql);
             ps.setInt(1, nuevaCantidad);
             ps.setInt(2, productoId);
@@ -217,13 +217,13 @@ public class ProductoDAO {
 
     private Producto mapearProducto(ResultSet rs) throws Exception {
         Proveedor proveedor = null;
-        int proveedorId = rs.getInt("proveedor_id");
+        int proveedorId = rs.getInt("id_prod");
         if (!rs.wasNull()) {
             proveedor = proveedorDAO.consultarPorId(proveedorId);
         }
 
         return new Producto(
-                rs.getInt("id"),
+                rs.getInt("id_prod"),
                 rs.getString("codigo"),
                 rs.getString("nombre"),
                 rs.getString("categoria"),
